@@ -201,7 +201,13 @@ function connect(code) {
     } else if (topic === BASE + '/status') {
       try {
         var st = JSON.parse(text);
-        if (st.announced) {
+        if (st.ack) {
+          showStatus('电脑已收到：' + st.ack, 'ok');
+        } else if (st.ignored) {
+          showStatus(st.reason === 'busy'
+            ? '电脑正忙，请稍后再试'
+            : st.ignored + ' 正在播报中，请稍候', 'err');
+        } else if (st.announced) {
           showStatus('电脑已播报：' + st.announced, 'ok');
         } else if (st.status === 'online') {
           setConn('on', '电脑在线');
